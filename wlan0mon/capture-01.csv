@@ -1,0 +1,12 @@
+
+BSSID, First time seen, Last time seen, channel, Speed, Privacy, Cipher, Authentication, Power, # beacons, # IV, LAN IP, ID-length, ESSID, Key
+7A:A2:F4:8A:99:88, 2024-01-16 00:37:31, 2024-01-16 00:39:20,  3, 130, WPA2, CCMP, PSK, -39,     1053,    53637,   0.  0.  0.  0,  18, Who_loves_the_sun?, 
+
+Station MAC, First time seen, Last time seen, Power, # packets, BSSID, Probed ESSIDs
+50:76:AF:BD:49:CB, 2024-01-16 00:37:31, 2024-01-16 00:39:20, -20,    52765, 7A:A2:F4:8A:99:88,
+14:C1:4E:85:44:78, 2024-01-16 00:37:32, 2024-01-16 00:39:20, -69,      334, 7A:A2:F4:8A:99:88,
+CC:F4:11:B2:E6:71, 2024-01-16 00:37:32, 2024-01-16 00:39:20, -70,      357, 7A:A2:F4:8A:99:88,
+BA:9A:6E:A9:7B:C6, 2024-01-16 00:37:33, 2024-01-16 00:39:14, -38,       54, 7A:A2:F4:8A:99:88,
+FC:67:1F:2A:F0:1B, 2024-01-16 00:37:35, 2024-01-16 00:39:05, -68,       28, 7A:A2:F4:8A:99:88,
+1C:61:B4:DD:07:C1, 2024-01-16 00:37:38, 2024-01-16 00:39:08, -37,       31, 7A:A2:F4:8A:99:88,
+
