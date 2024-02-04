@@ -115,7 +115,7 @@ y_test_transformed, y_pred_transformed = transform_binary_labels(np.array(y_test
 
 # Evaluating the model
 accuracy = accuracy_score(np.array(y_test), Y_pred)
-precision = precision_score(y_test_transformed, y_pred_transformed, average='macro')
+# precision = precision_score(y_test_transformed, y_pred_transformed, average='macro')
 # recall = recall_score(y_test_transformed, y_pred_transformed)
 f1 = f1_score(y_test_transformed, y_pred_transformed, average='macro')
 conf_matrix = confusion_matrix(y_test_transformed, y_pred_transformed)
@@ -123,7 +123,7 @@ class_report = classification_report(y_test_transformed, y_pred_transformed)
 
 # Printing the evaluation metrics
 print("Accuracy:", accuracy)
-print("Precision:", precision)
+# print("Precision:", precision)
 # print("Recall:", recall)
 print("F1 Score:", f1)
 print("\nConfusion Matrix:\n", conf_matrix)
