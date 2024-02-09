@@ -8,13 +8,13 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 
 function createData(
-  name: string,
-  calories: number,
-  fat: number,
-  carbs: number,
-  protein: number,
+  timestamp: number,
+  knn: number,
+  dt: number,
+  dnn: number,
+  
 ) {
-  return { name, calories, fat, carbs, protein };
+  return { timestamp, knn, dt, dnn };
 }
 
 const rows = [
@@ -45,12 +45,11 @@ export default function BasicTable() {
               sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
             >
               <TableCell component="th" scope="row">
-                {row.name}
+                {row.timestamp}
               </TableCell>
-              <TableCell align="right">{row.calories}</TableCell>
-              <TableCell align="right">{row.fat}</TableCell>
-              <TableCell align="right">{row.carbs}</TableCell>
-              <TableCell align="right">{row.protein}</TableCell>
+              <TableCell align="right">{row.knn}</TableCell>
+              <TableCell align="right">{row.dt}</TableCell>
+              <TableCell align="right">{row.dnn}</TableCell>
             </TableRow>
           ))}
         </TableBody>

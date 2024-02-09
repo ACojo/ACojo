@@ -1,0 +1,15 @@
+.Generator .switch {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* height: 100vh; */
+  }
+/*   
+.Generator .switch {
+    font-family: "Open Sans", sans-serif;
+    font-weight: 600;
+} */
+  
+.Generator .lander p {
+    color: #999;
+}
