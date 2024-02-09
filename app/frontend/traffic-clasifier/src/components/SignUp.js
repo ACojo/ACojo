@@ -140,9 +140,53 @@ export default function SignUp(props) {
               <p> </p>
               <h>The source IP</h>
               <p> </p>
-              <Grid>
               <Grid container spacing={2}>
-                <FormControl sx={{ m: 1, minWidth: 120 }}>
+                <Grid item xs={12} sm={3}>
+                  <TextField
+                    required
+                    fullWidth
+                    id="IPDestA"
+                    label="IP A"
+                    name="IPDestA"
+                    autoComplete="IP A"
+                  />
+                </Grid>
+                <Grid item xs={12} sm={3}>
+                  <TextField
+                    required
+                    fullWidth
+                    id="IPDestB"
+                    label="IP B"
+                    name="IPDestB"
+                    autoComplete="IP B"
+                  />
+                </Grid>
+                <Grid item xs={12} sm={3}>
+                  <TextField
+                    required
+                    fullWidth
+                    id="IPDestC"
+                    label="IP C"
+                    name="IPDestC"
+                    autoComplete="IP C"
+                  />
+                </Grid>
+                <Grid item xs={12} sm={3}>
+                  <TextField
+                    required
+                    fullWidth
+                    id="IPDestD"
+                    label="IP D"
+                    name="IPDestd"
+                    autoComplete="IP D"
+                  />
+                </Grid>
+              </Grid>
+              <p></p>
+              <h> </h>
+              <p></p>
+              <Grid container spacing={2}>
+                <FormControl sx={{ m: 2, width: 170 }}>
                   <InputLabel id="demo-simple-select-helper-label">Age</InputLabel>
                   <Select
                     labelId="flags"
@@ -161,18 +205,27 @@ export default function SignUp(props) {
                   </Select>
                   <FormHelperText>With label + helper text</FormHelperText>
                   </FormControl>
-                <Grid item xs={12} sm={6}>
-                  <TextField
-                    required
-                    fullWidth
-                    id="TimeBetweenPackets"
-                    label="Time between packets"
-                    name="TimeBetweenPackets"
-                    autoComplete="Time between packets"
-                  />
-                </Grid>
+                  <FormControl sx={{ m: 2, width: 175 }}>
+                  <InputLabel id="demo-simple-select-helper-label">Age</InputLabel>
+                  <Select
+                    labelId="flags"
+                    name='flags'
+                    id="flags"
+                    value={10}
+                    label="Age"
+                    // onChange={handleChange}
+                  >
+                    <MenuItem value="">
+                      <em>None</em>
+                    </MenuItem>
+                    <MenuItem value={10}>10</MenuItem>
+                    <MenuItem value={20}>Twenty</MenuItem>
+                    <MenuItem value={30}>Thirty</MenuItem>
+                  </Select>
+                  <FormHelperText>With label + helper text</FormHelperText>
+                  </FormControl>
             </Grid>
-            </Grid>
+            
             <Button
               type="submit"
               fullWidth
