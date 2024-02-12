@@ -39,7 +39,8 @@ const defaultTheme = createTheme();
 export default function SignUp(props) {
 
   const [noPkt,setNoPkt] = useState('')
-
+  const [flags, setFlags] = useState('')
+  const [method, setMethod] = useState('')
 
 
   const handleSubmit = (event) => {
@@ -187,42 +188,43 @@ export default function SignUp(props) {
               <p></p>
               <Grid container spacing={2}>
                 <FormControl sx={{ m: 2, width: 170 }}>
-                  <InputLabel id="demo-simple-select-helper-label">Age</InputLabel>
+                  <InputLabel id="demo-simple-select-helper-label">Method</InputLabel>
                   <Select
-                    labelId="flags"
-                    name='flags'
-                    id="flags"
-                    value={10}
-                    label="Age"
-                    // onChange={handleChange}
+                    labelId="method"
+                    name='method'
+                    id="method"
+                    value={method}
+                    label="method"
+                    onChange={(event) => {setMethod(event.target.value)}}
                   >
-                    <MenuItem value="">
+                    {/* <MenuItem value="">
                       <em>None</em>
-                    </MenuItem>
-                    <MenuItem value={10}>10</MenuItem>
-                    <MenuItem value={20}>Twenty</MenuItem>
-                    <MenuItem value={30}>Thirty</MenuItem>
+                    </MenuItem> */}
+                    <MenuItem value={0}>DELETE</MenuItem>
+                    <MenuItem value={250}>GET</MenuItem>
+                    <MenuItem value={500}>POST</MenuItem>
+                    <MenuItem value={750}>PUT</MenuItem>
                   </Select>
-                  <FormHelperText>With label + helper text</FormHelperText>
+
                   </FormControl>
                   <FormControl sx={{ m: 2, width: 175 }}>
-                  <InputLabel id="demo-simple-select-helper-label">Age</InputLabel>
+                  <InputLabel id="demo-simple-select-helper-label">Flags</InputLabel>
                   <Select
                     labelId="flags"
                     name='flags'
                     id="flags"
-                    value={10}
-                    label="Age"
-                    // onChange={handleChange}
+                    value={flags}
+                    label="flags"
+                    onChange={(event) => {setFlags(event.target.value)}}
                   >
-                    <MenuItem value="">
+                    {/* <MenuItem value="">
                       <em>None</em>
-                    </MenuItem>
+                    </MenuItem> */}
                     <MenuItem value={10}>10</MenuItem>
                     <MenuItem value={20}>Twenty</MenuItem>
                     <MenuItem value={30}>Thirty</MenuItem>
                   </Select>
-                  <FormHelperText>With label + helper text</FormHelperText>
+ 
                   </FormControl>
             </Grid>
             
