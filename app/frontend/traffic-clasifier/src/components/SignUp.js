@@ -18,6 +18,7 @@ import MenuItem from "@mui/material/MenuItem";
 import FormHelperText from "@mui/material/FormHelperText";
 import InputLabel from "@mui/material/InputLabel";
 import FormControl from "@mui/material/FormControl";
+import axios from "axios";
 
 function Copyright(props) {
   return (
@@ -58,44 +59,71 @@ export default function SignUp(props) {
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    let string =
+    let ipdest =
       data.get("IPDestA") +
+      "." +
       data.get("IPDestB") +
+      "." +
       data.get("IPDestC") +
-      data.get("IPDestD") +
+      "." +
+      data.get("IPDestD");
+    let ipsrc =
       data.get("IPSrcA") +
+      "." +
       data.get("IPSrcB") +
+      "." +
       data.get("IPSrcC") +
+      "." +
       data.get("IPSrcD");
-    const matches = string.match(/[a-zA-Z]/g); // Caută toate literele din șir
+    const matchesIpDest = ipdest.match(/[a-zA-Z]/g); // Caută toate literele din șir
+    const matchesIpSrc = ipsrc.match(/[a-zA-Z]/g); // Caută toate literele din șir
     // const containsLetters = matches !== null && matches.length > 0;
-    if (!(matches !== null && matches.length > 0)) {
-      console.log("merge");
+    if (
+      !(
+        matchesIpDest !== null &&
+        matchesIpDest.length > 0 &&
+        matchesIpSrc !== null &&
+        matchesIpSrc.length > 0
+      )
+    ) {
+      console.log(props.name);
+      console.log(props.methodPort);
 
-      console.log({
+      
+      const dataPUT = { 
+        // console.log({
+        traffic: props.name,
         pkts: data.get("pkts"),
         TimeBetweenPackets: data.get("TimeBetweenPackets"),
         pktsSize: data.get("pktsSize"),
-        ipDest:
-          data.get("IPDestA") +
-          "." +
-          data.get("IPDestB") +
-          "." +
-          data.get("IPDestC") +
-          "." +
-          data.get("IPDestD"),
-        ipSrc:
-          data.get("IPSrcA") +
-          "." +
-          data.get("IPSrcB") +
-          "." +
-          data.get("IPSrcC") +
-          "." +
-          data.get("IPSrcD"),
+        ipDest: ipdest,
+        ipSrc: ipsrc,
         method: data.get("method"),
-        flags: data.get("flags"),
-      });
+        flags: data.get("flags")};
+      // });
       setNoPkt("");
+      setFlags("");
+      setMethod("");
+      setPktSize("");
+      setIpDestA("");
+      setIpDestB("");
+      setIpDestC("");
+      setIpDestD("");
+      setIpSrcA("");
+      setIpSrcB("");
+      setIpSrcC("");
+      setIpSrcD("");
+
+      let url="localhost:8000/sendtraffic/"
+      axios.put(url, dataPUT)
+      .then(response => {
+        console.log("Răspuns de la server:", response.data);
+        
+      })
+      .catch(error => {
+        console.error("Eroare:", error);
+      });
+
     }
   };
 
@@ -149,7 +177,7 @@ export default function SignUp(props) {
                   name="pktsSize"
                   fullWidth
                   id="pktsSize"
-                  label="Package size (1,5kB - 9kB)"
+                  label="Package size (1 500B - 9 000B)"
                   autoFocus
                   value={pktsSize}
                   onChange={(event) => {
@@ -282,7 +310,7 @@ export default function SignUp(props) {
             <Grid container spacing={2}>
               <FormControl sx={{ m: 2, width: 170 }}>
                 <InputLabel id="demo-simple-select-helper-label">
-                  Method
+                  {props.methodPort}
                 </InputLabel>
                 <Select
                   labelId="method"
@@ -297,35 +325,61 @@ export default function SignUp(props) {
                   {/* <MenuItem value="">
                       <em>None</em>
                     </MenuItem> */}
-                  <MenuItem value={0}>DELETE</MenuItem>
-                  <MenuItem value={250}>GET</MenuItem>
-                  <MenuItem value={500}>POST</MenuItem>
-                  <MenuItem value={750}>PUT</MenuItem>
+                  <MenuItem value={0}>{props.listMethodPort[0]}</MenuItem>
+                  <MenuItem value={250}>{props.listMethodPort[1]}</MenuItem>
+                  <MenuItem value={500}>{props.listMethodPort[2]}</MenuItem>
+                  <MenuItem value={750}>{props.listMethodPort[3]}</MenuItem>
                 </Select>
               </FormControl>
-              <FormControl sx={{ m: 2, width: 175 }}>
-                <InputLabel id="demo-simple-select-helper-label">
-                  Flags
-                </InputLabel>
-                <Select
-                  labelId="flags"
-                  name="flags"
-                  id="flags"
-                  value={flags}
-                  label="flags"
-                  onChange={(event) => {
-                    setFlags(event.target.value);
-                  }}
-                >
-                  {/* <MenuItem value="">
-                      <em>None</em>
-                    </MenuItem> */}
-                  <MenuItem value={0}>RESET</MenuItem>
-                  <MenuItem value={250}>ACK</MenuItem>
-                  <MenuItem value={500}>SYN</MenuItem>
-                  <MenuItem value={750}>ECHO REQUEST</MenuItem>
-                </Select>
-              </FormControl>
+
+              {(props.name === "tcp" )? (
+                <FormControl sx={{ m: 2, width: 175 }}>
+                  <InputLabel id="demo-simple-select-helper-label">
+                    Flags
+                  </InputLabel>
+                  <Select
+                    labelId="flags"
+                    name="flags"
+                    id="flags"
+                    value={flags}
+                    label="flags"
+                    onChange={(event) => {
+                      setFlags(event.target.value);
+                    }}
+                  >
+                    {/* <MenuItem value="">
+                    <em>None</em>
+                  </MenuItem> */}
+                    <MenuItem value={0}>RESET</MenuItem>
+                    <MenuItem value={250}>ACK</MenuItem>
+                    <MenuItem value={500}>SYN</MenuItem>
+                    <MenuItem value={750}>ECHO REQUEST</MenuItem>
+                  </Select>
+                </FormControl>
+              ) : (
+                <FormControl sx={{ m: 2, width: 175 }}>
+                  <InputLabel id="demo-simple-select-helper-label">
+                    Flags
+                  </InputLabel>
+                  <Select
+                    labelId="flags"
+                    name="flags"
+                    id="flags"
+                    value={flags}
+                    label="flags"
+                    onChange={(event) => {
+                      setFlags(event.target.value);
+                    }}
+                  >
+                    {/* <MenuItem value="">
+                            <em>None</em>
+                          </MenuItem> */}
+                    <MenuItem value={0}>IN</MenuItem>
+
+                    <MenuItem value={750}>OUT</MenuItem>
+                  </Select>
+                </FormControl>
+              )}
             </Grid>
 
             <Button
