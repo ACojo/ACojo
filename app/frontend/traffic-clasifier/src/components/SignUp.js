@@ -114,7 +114,7 @@ export default function SignUp(props) {
       setIpSrcC("");
       setIpSrcD("");
 
-      let url="localhost:8000/sendtraffic/"
+      let url="127.0.0.1:8000/sendtraffic/"
       axios.put(url, dataPUT)
       .then(response => {
         console.log("Răspuns de la server:", response.data);
