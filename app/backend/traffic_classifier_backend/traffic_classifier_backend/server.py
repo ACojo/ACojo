@@ -1,7 +1,10 @@
 from threading import Thread
 from multiprocessing import Process
 import subprocess
-from flask import Flask, request
+from flask import Flask, request, jsonify
+from flask_cors import CORS, cross_origin
+from generateTraffic import send_packet
+
 
 #from time import sleep
 import time
@@ -10,66 +13,66 @@ import os
 
 
 app = Flask(__name__)
+cors = CORS(app, resources={r"/api/*": {"origins": "*"}})
+# app.config['CORS_HEADERS'] = 'Content-Type'
 
 
 
 
 
-# for the url
-@app.route('/led/' , methods=[ 'GET', 'PUT' ])
-def index_rgb():
-        global led
-        if request.method == "GET" :
-                return str(led.r_value) + " " + str(led.g_value) + " " + str(led.b_value)
-        if request.method == "PUT" :
-                #print(type(request.get_data()))
-                data = request.get_data().decode('UTF-8')
-                data = data.split("&")
-                print(data)
-                g_value = data[0].split("=")[1]
-                r_value  = data[1].split("=")[1]
-                b_value = data[2].split("=")[1]
-
-                led.r_value = int( r_value )
-                led.g_value = int( g_value )
-                led.b_value = int( b_value )
-
-                return "HELLO " + str(led.r_value) + str(led.g_value) + str(led.b_value)
-        else:
-                return "NOT WELCOME"
+# @app.route('/api/generatetraffic',methods = ['GET'])
+# def test():
+#         return "GOOD"
 
 
-@app.route('/ac_motor/' , methods=['PUT', 'GET'])
-def index_motor():
-        global motor
+@app.route('/api/generatetraffic',methods = ['GET','PUT'])
+# @cross_origin(supports_credentials=True)
+def index_generate():
         if request.method == "GET":
-                return str(motor.current_pwm) + " " + str(motor.rotation)
-        if request.method == "PUT":
-                data = request.get_data().decode('UTF-8')
-                data = data.split("&")
-                rotation_data_value = False
+                return "generate"
+        if request.method =='PUT':
+                try:
+                # Primiți datele JSON trimise în corpul cererii PUT
+                        data = request.json
+        
+                # Aici poți face ce dorești cu datele primite
+                        print("Date primite:", data)
 
-                if int(data[0].split("=")[1]) != motor.current_pwm:
-                        motor.current_pwm = int(data[0].split("=")[1])
-                        motor.change_duty_cycle()
-                if data[1].split("=")[1] == "true":
-                        rotation_data_value = True
+                        print(data['traffic'])
+                # Răspunde cu un mesaj de succes
+                        response = jsonify({'response': 'processed'})
+                        response.headers.add('Access-Control-Allow-Origin', '*')
+                        
+                
+                        for i in range(0,data['pkts']):
+                                send_packet(data=data)
+                                time.sleep(data['TimeBetweenPackets'])
+                                
+                        return response
 
-                if motor.rotation != rotation_data_value:
-                        motor.rotation = rotation_data_value
-                        motor.change_rotation()
-                        print(rotation_data_value)
+                except Exception as e:
 
-                return  "HELLO MOTOR"
+                        response = jsonify({'error': str(e)})
+                        response.headers.add('Access-Control-Allow-Origin', '*')
+                        return response
+                        # În caz de eroare, răspunde cu un mesaj de eroare
+                        return jsonify({"error": str(e)}), 500
+                        # return "GOOD"
         else:
-                return "NOT WELCOME"
+                return "not good"
+        
+#         try:
+#         # Primiți datele JSON trimise în corpul cererii PUT
+#         data = request.json
+        
+#         # Aici poți face ce dorești cu datele primite
+#         print("Date primite:", data)
 
-
-
-
-@app.route('/',methods = ['GET'])
-def test():
-        return "GOOD"
+#         # Răspunde cu un mesaj de succes
+#         return jsonify({"message": "Date primite cu succes"}), 200
+#     except Exception as e:
+#         # În caz de eroare, răspunde cu un mesaj de eroare
+#         return jsonify({"error": str(e)}), 500
 
 
 

@@ -56,7 +56,7 @@ export default function SignUp(props) {
   const [ipSrcC, setIpSrcC] = useState("");
   const [ipSrcD, setIpSrcD] = useState("");
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async(event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     let ipdest =
@@ -114,15 +114,32 @@ export default function SignUp(props) {
       setIpSrcC("");
       setIpSrcD("");
 
-      let url="127.0.0.1:8000/sendtraffic/"
-      axios.put(url, dataPUT)
-      .then(response => {
-        console.log("Răspuns de la server:", response.data);
+
+      let url="http://localhost:5000/api/generatetraffic"
+      try{
+        const response = await axios.put(url, dataPUT);
+        console.log(response.data)
         
-      })
-      .catch(error => {
+
+
+
+      }catch(error ){
         console.error("Eroare:", error);
-      });
+      };
+
+
+
+
+      // let url="http://127.0.0.1:5000/generatetraffic"
+      // axios.put(url, dataPUT)        # else:
+        // #         return "not good"
+      // .then(response => {
+      //   console.log("Răspuns de la server:", response.data);
+        
+      // })
+      // .catch(error => {
+      //   console.error("Eroare:", error);
+      // });
 
     }
   };
