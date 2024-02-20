@@ -376,7 +376,7 @@ export default function SignUp(props) {
               ) : (
                 <FormControl sx={{ m: 2, width: 175 }}>
                   <InputLabel id="demo-simple-select-helper-label">
-                    Flags
+                    Traffic Type
                   </InputLabel>
                   <Select
                     labelId="flags"

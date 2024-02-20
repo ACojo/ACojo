@@ -4,6 +4,7 @@ import subprocess
 from flask import Flask, request, jsonify
 from flask_cors import CORS, cross_origin
 from generateTraffic import send_packet
+from generate import generate
 
 
 #from time import sleep
@@ -43,16 +44,19 @@ def index_generate():
                         response = jsonify({'response': 'processed'})
                         response.headers.add('Access-Control-Allow-Origin', '*')
                         
-                
-                        for i in range(0,data['pkts']):
-                                send_packet(data=data)
-                                time.sleep(data['TimeBetweenPackets'])
-                                
+                        print(data['pkts'])
+                        print(type(data['pkts']))
+                        print(type(int(data['pkts'])))
+                        for i in range(0,int(data['pkts'])):
+                                # send_packet(data=data, type=data['traffic'])
+                                time.sleep(int(data['TimeBetweenPackets']))
+                        generate(data=data, type=data['traffic'])    
                         return response
 
                 except Exception as e:
 
                         response = jsonify({'error': str(e)})
+                        print(e)
                         response.headers.add('Access-Control-Allow-Origin', '*')
                         return response
                         # În caz de eroare, răspunde cu un mesaj de eroare
