@@ -5,12 +5,47 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS, cross_origin
 from generateTraffic import send_packet
 from generate import generate
-
-
 #from time import sleep
 import time
-
 import os
+import numpy as np
+import pandas as pd
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import MinMaxScaler
+from sklearn.metrics import confusion_matrix, classification_report, accuracy_score
+from sklearn.tree import DecisionTreeClassifier
+
+
+
+
+data = pd.read_csv("/home/scooby-doo/Disertatie/DataSet/tcp_data.csv")
+
+# reading the data from the dataset
+x_data = data.drop("class", axis=1)
+y_data = data["class"]
+
+# scaling the data so that it will be in 0 1 range
+scaler = MinMaxScaler()
+x_data = scaler.fit_transform(x_data)
+
+# spliting the data into test and train
+
+x_train, x_test, y_train, y_test = train_test_split(x_data, y_data, test_size=0.3, random_state=1)
+
+knn = KNeighborsClassifier(n_neighbors=3)
+dt = DecisionTreeClassifier()
+
+
+
+knn.fit(x_train, y_train)
+dt.fit(x_train, y_train)
+
+
+
+
+
+
 
 
 app = Flask(__name__)
@@ -26,10 +61,21 @@ cors = CORS(app, resources={r"/api/*": {"origins": "*"}})
 #         return "GOOD"
 
 
+@app.route('/api/getClassifiedData', methods = ['GET'])
+def classified_data():
+        if request.method =='GET':
+                return "merge bine"
+
+
+
+
 @app.route('/api/generatetraffic',methods = ['GET','PUT'])
 # @cross_origin(supports_credentials=True)
 def index_generate():
         if request.method == "GET":
+                # # return "generate"
+                # knn.predict(x_test)
+                # print(knn.predict(x_test))
                 return "generate"
         if request.method =='PUT':
                 try:
@@ -49,8 +95,9 @@ def index_generate():
                         print(type(int(data['pkts'])))
                         for i in range(0,int(data['pkts'])):
                                 # send_packet(data=data, type=data['traffic'])
-                                time.sleep(int(data['TimeBetweenPackets']))
+                                time.sleep(int(data['TimeBetweenPackets'])*0.001)
                         generate(data=data, type=data['traffic'])    
+                        print(data)
                         return response
 
                 except Exception as e:
