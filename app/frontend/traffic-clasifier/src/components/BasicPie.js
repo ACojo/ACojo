@@ -12,9 +12,10 @@ export default function BasicPie() {
         series={[
           {
             data: [
-              { id: 0, value: 10, label: 'series A' },
-              { id: 1, value: 15, label: 'series B' },
-              { id: 2, value: 20, label: 'series C' },
+              { id: 0, value: 10, label: 'Normal  traffic' },
+              { id: 1, value: 10, label: 'DOS / DDOS' },
+              { id: 2, value: 15, label: 'Smurf' },
+              { id: 3, value: 20, label: 'Buffer overflow' },
             ],
           },
         ]}

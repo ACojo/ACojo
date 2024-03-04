@@ -35,7 +35,7 @@ export default function Home(props) {
             variant="btn btn-success"
             onClick={handleSubmit}
           >
-            Click button to view products
+            Evaluate current traffic
           </Button>
         </form>
       </div>

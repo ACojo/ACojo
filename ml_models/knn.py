@@ -26,6 +26,9 @@ knn.fit(x_train, y_train)
 
 y_predict = knn.predict(x_test)
 
+print(x_test)
+print(type(x_test))
+
 print(confusion_matrix(y_test, y_predict))
 print(classification_report(y_test, y_predict))
 print(accuracy_score(y_test, y_predict))

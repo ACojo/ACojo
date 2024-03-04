@@ -64,6 +64,12 @@ cors = CORS(app, resources={r"/api/*": {"origins": "*"}})
 @app.route('/api/getClassifiedData', methods = ['GET'])
 def classified_data():
         if request.method =='GET':
+                # with open('traffic_udp.txt','r') as file:
+                #         li = file.readlines()
+                #         line = [line.split() for line in li ]
+                line = pd.array( 12, 124312, 1, 1, 500, 500, 500, 500, 500 ,500, 500, 500, 250, 250, 250, 250, 250, 250, 250, 250)
+                result = knn.predict(line)
+                print(result)
                 return "merge bine"
 
 
