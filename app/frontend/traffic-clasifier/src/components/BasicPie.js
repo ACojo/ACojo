@@ -1,8 +1,9 @@
 import * as React from 'react';
 import { PieChart } from '@mui/x-charts/PieChart';
 
-export default function BasicPie() {
+export default function BasicPie(props) {
   return (
+    console.log(props.tcpResult),
     <div style={{
       display: "flex",
       alignItems: "center",
@@ -21,7 +22,7 @@ export default function BasicPie() {
         ]}
         width={400}
         height={200}
-      
+        
     />
 
 

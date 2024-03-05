@@ -11,12 +11,14 @@ export default function Home(props) {
   const [attackMessage, setAttackMessage] = useState(
     "Currently there is no anomaly detected"
   );
+  const [tcpResult, SetTcpResult] = useState([0,0,0,0])
 
   // the get request
   const handleSubmit = async (event) => {
     let url = "http://localhost:5000/api/getClassifiedData";
     try {
       const response = await axios.get(url);
+      SetTcpResult(response.data)
       console.log(response.data);
     } catch (error) {
       console.error("Eroare:", error);
@@ -29,7 +31,7 @@ export default function Home(props) {
       <div className="lander">
         <h1>Home page</h1>
         <p>{attackMessage}</p>
-        <BasicPie />
+        <BasicPie props={tcpResult} />
         <form>
           <Button
             variant="btn btn-success"

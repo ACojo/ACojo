@@ -15,6 +15,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.metrics import confusion_matrix, classification_report, accuracy_score
 from sklearn.tree import DecisionTreeClassifier
+from classify_traffic import traffic_classification
 
 
 
@@ -64,13 +65,18 @@ cors = CORS(app, resources={r"/api/*": {"origins": "*"}})
 @app.route('/api/getClassifiedData', methods = ['GET'])
 def classified_data():
         if request.method =='GET':
-                # with open('traffic_udp.txt','r') as file:
-                #         li = file.readlines()
-                #         line = [line.split() for line in li ]
-                line = pd.array( 12, 124312, 1, 1, 500, 500, 500, 500, 500 ,500, 500, 500, 250, 250, 250, 250, 250, 250, 250, 250)
+                traffic_classification()
+                appearances = [0, 0, 0, 0]
+                # with open('traffic_udp.csv','r') as file:
+                # li = file.readlines()
+                # line = [line.split() for line in li ]
+                # line = pd.array( 12, 124312, 1, 1, 500, 500, 500, 500, 500 ,500, 500, 500, 250, 250, 250, 250, 250, 250, 250, 250)
+                line = pd.read_csv("traffic_tcp_processed.csv")
                 result = knn.predict(line)
-                print(result)
-                return "merge bine"
+                for value in result:
+                        appearances[value] +=1
+                print(appearances)
+                return appearances
 
 
 

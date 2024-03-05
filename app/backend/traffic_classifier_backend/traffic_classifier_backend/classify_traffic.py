@@ -1,10 +1,13 @@
+import csv
+
 
 def traffic_classification():
     # traffic_file = open("traffic_tcp.txt", "a")
     tcp_reset = True
     udp_reset = False
     with open('traffic_tcp.txt','r') as file:
-        proccessed_traffic  = open("traffic_tcp_processed.txt", "a")
+        proccessed_traffic  = open("traffic_tcp_processed.csv", "a")
+        writer = csv.writer(proccessed_traffic)
         li = file.readlines()
         total_line = len(li)
         # print(li[0].split())
@@ -54,7 +57,8 @@ def traffic_classification():
                             str_networ_input = ''
                             for el in network_input:
                                  str_networ_input = str_networ_input + ' ' + str(el)
-                            proccessed_traffic.write(str_networ_input + '\n')
+                            # proccessed_traffic.write(str_networ_input + '\n')
+                            writer.writerow(network_input)
                             print()
                 proccessed_traffic.close()
 
@@ -64,7 +68,8 @@ def traffic_classification():
          file.close()   
 
     with open('traffic_udp.txt','r') as file:
-        proccessed_traffic  = open("traffic_udp_processed.txt", "a")
+        proccessed_traffic  = open("traffic_udp_processed.csv", "a")
+        writer = csv.writer(proccessed_traffic)
         li = file.readlines()
         total_line = len(li)
         # print(li[0].split())
@@ -111,28 +116,30 @@ def traffic_classification():
                             network_input += [int(m) for m in method]
                             print("currnet input")
                             print(network_input)
-                            proccessed_traffic.write(network_input + "\n")
+                            # proccessed_traffic.write(network_input + "\n")
+                            writer.writerow(network_input)
+
                             print()
-                            
+                proccessed_traffic.close()          
     if udp_reset == True:
          file = open('traffic_udp.txt','w')
          file.write('')
          file.close()   
                         
-        print(f"Number of lines in the notepad file: {total_line}")
+         print(f"Number of lines in the notepad file: {total_line}")
     
 
-    if data:
-        print(data)
-    else:
-        traffic_udp_file = open('traffic_udp', "w")
-        li = traffic_udp_file.readlines()
-        print(len(data))
-        # print(data)
-        with open('traffic_udp.txt','r') as file:
-        li = file.readlines()
-        total_line = len(li)
-        print(f"Number of lines in the notepad file: {total_line}")
+    # if data:
+    #      print(data)
+    # else:
+    #      traffic_udp_file = open('traffic_udp', "w")
+    #      li = traffic_udp_file.readlines()
+    #      print(len(data))
+    #      # print(data)
+    #      with open('traffic_udp.txt','r') as file:
+    #          li = file.readlines()
+    #          total_line = len(li)
+    #          print(f"Number of lines in the notepad file: {total_line}")
     
 
 
