@@ -72,10 +72,14 @@ def classified_data():
                 # line = [line.split() for line in li ]
                 # line = pd.array( 12, 124312, 1, 1, 500, 500, 500, 500, 500 ,500, 500, 500, 250, 250, 250, 250, 250, 250, 250, 250)
                 line = pd.read_csv("traffic_tcp_processed.csv")
+                print(line.length) #este un obiect data frame
                 result = knn.predict(line)
                 for value in result:
                         appearances[value] +=1
                 print(appearances)
+                proccessed_traffic  = open("traffic_tcp_processed.csv", "w")
+                proccessed_traffic.write('')
+                proccessed_traffic.close()
                 return appearances
 
 

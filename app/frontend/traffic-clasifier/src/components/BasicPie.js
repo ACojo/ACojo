@@ -3,7 +3,11 @@ import { PieChart } from '@mui/x-charts/PieChart';
 
 export default function BasicPie(props) {
   return (
+    console.log(props),
+    // console.log(tcpResult.content[0]),
+    console.log(typeof(props.tcpResult)),
     console.log(props.tcpResult),
+    console.log(props.tcpResult[0]),
     <div style={{
       display: "flex",
       alignItems: "center",
@@ -13,10 +17,10 @@ export default function BasicPie(props) {
         series={[
           {
             data: [
-              { id: 0, value: 10, label: 'Normal  traffic' },
-              { id: 1, value: 10, label: 'DOS / DDOS' },
-              { id: 2, value: 15, label: 'Smurf' },
-              { id: 3, value: 20, label: 'Buffer overflow' },
+              { id: 0, value: props.tcpResult[0], label: 'Normal  traffic' },
+              { id: 1, value: props.tcpResult[1], label: 'DOS / DDOS' },
+              { id: 2, value: props.tcpResult[2], label: 'Smurf' },
+              { id: 3, value: props.tcpResult[3], label: 'Buffer overflow' },
             ],
           },
         ]}
