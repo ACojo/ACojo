@@ -20,6 +20,16 @@ from classify_traffic import traffic_classification
 
 
 
+
+
+knn_tcp = KNeighborsClassifier(n_neighbors=3)
+dt_tcp = DecisionTreeClassifier()
+
+knn_udp = KNeighborsClassifier(n_neighbors=3)
+dt_udp = DecisionTreeClassifier()
+
+
+
 data = pd.read_csv("/home/scooby-doo/Disertatie/DataSet/tcp_data.csv")
 
 # reading the data from the dataset
@@ -34,13 +44,10 @@ x_data = scaler.fit_transform(x_data)
 
 x_train, x_test, y_train, y_test = train_test_split(x_data, y_data, test_size=0.3, random_state=1)
 
-knn = KNeighborsClassifier(n_neighbors=3)
-dt = DecisionTreeClassifier()
 
 
-
-knn.fit(x_train, y_train)
-dt.fit(x_train, y_train)
+knn_tcp.fit(x_train, y_train)
+dt_tcp.fit(x_train, y_train)
 
 
 
@@ -66,21 +73,35 @@ cors = CORS(app, resources={r"/api/*": {"origins": "*"}})
 def classified_data():
         if request.method =='GET':
                 traffic_classification()
-                appearances = [0, 0, 0, 0]
+                appearances_tcp = [0, 0, 0, 0]
+                appearances_udp = [0, 0, 0, 0]
                 # with open('traffic_udp.csv','r') as file:
                 # li = file.readlines()
                 # line = [line.split() for line in li ]
                 # line = pd.array( 12, 124312, 1, 1, 500, 500, 500, 500, 500 ,500, 500, 500, 250, 250, 250, 250, 250, 250, 250, 250)
                 line = pd.read_csv("traffic_tcp_processed.csv")
-                print(line.length) #este un obiect data frame
-                result = knn.predict(line)
-                for value in result:
-                        appearances[value] +=1
-                print(appearances)
+                print(len(line)) #este un obiect data frame
+                if len(line) >0:
+                        result = knn_tcp.predict(line)
+                        for value in result:
+                                appearances_tcp[value] +=1
+                # print(appearances)
+                line = pd.read_csv("traffic_udp_processed.csv")
+                if len(line) >0:
+                        result = knn_tcp.predict(line)
+                        # result = knn_udp.predint(line)
+                        for value in result:
+                                appearances_udp[value] +=1
                 proccessed_traffic  = open("traffic_tcp_processed.csv", "w")
                 proccessed_traffic.write('')
                 proccessed_traffic.close()
-                return appearances
+                
+                
+                proccessed_traffic  = open("traffic_udp_processed.csv", "w")
+                proccessed_traffic.write('')
+                proccessed_traffic.close()
+
+                return appearances_tcp + appearances_udp
 
 
 

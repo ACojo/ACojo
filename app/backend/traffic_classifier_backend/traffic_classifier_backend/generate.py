@@ -2,7 +2,7 @@ def generate(data, type):
     if type =='tcp':
         traffic_file = open("traffic_tcp.txt", "a")
     else:
-        traffic_file = open('traffic_udp', "a")
+        traffic_file = open('traffic_udp.txt', "a")
     print(data)
     traffic=""
     for key,value in data.items():
