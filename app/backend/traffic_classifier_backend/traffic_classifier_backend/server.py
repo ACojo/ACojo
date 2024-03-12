@@ -79,19 +79,25 @@ def classified_data():
                 # li = file.readlines()
                 # line = [line.split() for line in li ]
                 # line = pd.array( 12, 124312, 1, 1, 500, 500, 500, 500, 500 ,500, 500, 500, 250, 250, 250, 250, 250, 250, 250, 250)
-                line = pd.read_csv("traffic_tcp_processed.csv")
-                print(len(line)) #este un obiect data frame
-                if len(line) >0:
-                        result = knn_tcp.predict(line)
-                        for value in result:
-                                appearances_tcp[value] +=1
+                try:
+                        line = pd.read_csv("traffic_tcp_processed.csv")
+                        print(len(line)) #este un obiect data frame
+                        if len(line) >0:
+                                result = knn_tcp.predict(line)
+                                for value in result:
+                                        appearances_tcp[value] +=1
                 # print(appearances)
-                line = pd.read_csv("traffic_udp_processed.csv")
-                if len(line) >0:
-                        result = knn_tcp.predict(line)
-                        # result = knn_udp.predint(line)
-                        for value in result:
-                                appearances_udp[value] +=1
+                except:
+                        print("there is no tcp traffic")
+                try:
+                        line = pd.read_csv("traffic_udp_processed.csv")
+                        if len(line) >0:
+                                result = knn_tcp.predict(line)
+                                # result = knn_udp.predint(line)
+                                for value in result:
+                                        appearances_udp[value] +=1
+                except:
+                        print("there is no udp traffic")
                 proccessed_traffic  = open("traffic_tcp_processed.csv", "w")
                 proccessed_traffic.write('')
                 proccessed_traffic.close()
