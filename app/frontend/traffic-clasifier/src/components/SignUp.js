@@ -56,7 +56,108 @@ export default function SignUp(props) {
   const [ipSrcC, setIpSrcC] = useState("");
   const [ipSrcD, setIpSrcD] = useState("");
 
-  const handleSubmit = async(event) => {
+  const SendNormalTraffic = async (event) => {
+    console.log("normal traffic");
+
+    // event.preventDefault();
+    // const data = new FormData(event.currentTarget);
+
+
+      const dataPUT = {
+        // console.log({
+        traffic: props.name,
+        pkts: noPkt,
+        type: "normal"
+      };
+      // });
+      setNoPkt("");
+
+      let url = "http://localhost:5000/api/generateCustomTraffic";
+      try {
+        const response = await axios.put(url, dataPUT);
+        console.log(response.data);
+      } catch (error) {
+        console.error("Eroare:", error);
+      }
+    
+  };
+
+  const sendBufferTraffic = async (event) => {
+    console.log("buffer");
+
+    // event.preventDefault();
+    // const data = new FormData(event.currentTarget);
+
+
+      const dataPUT = {
+        // console.log({
+        traffic: props.name,
+        pkts: noPkt,
+        type: "buffer"
+      };
+      // });
+      setNoPkt("");
+
+      let url = "http://localhost:5000/api/generateCustomTraffic";
+      try {
+        const response = await axios.put(url, dataPUT);
+        console.log(response.data);
+      } catch (error) {
+        console.error("Eroare:", error);
+      }
+  };
+
+  const sendDDoSTraffic = async (event) => {
+    console.log("ddos");
+
+    // event.preventDefault();
+    // const data = new FormData(event.currentTarget);
+
+
+      const dataPUT = {
+        // console.log({
+        traffic: props.name,
+        pkts: noPkt,
+        type: "ddos"
+      };
+      // });
+      setNoPkt("");
+
+      let url = "http://localhost:5000/api/generateCustomTraffic";
+      try {
+        const response = await axios.put(url, dataPUT);
+        console.log(response.data);
+      } catch (error) {
+        console.error("Eroare:", error);
+      }
+  };
+
+  const SendSmurfTraffic = async (event) => {
+    console.log("smurf");
+
+    // event.preventDefault();
+    // const data = new FormData(event.currentTarget);
+
+
+      const dataPUT = {
+        // console.log({
+        traffic: props.name,
+        pkts: noPkt,
+        type: "smurf"
+      };
+      // });
+      setNoPkt("");
+
+      let url = "http://localhost:5000/api/generateCustomTraffic";
+      try {
+        const response = await axios.put(url, dataPUT);
+        console.log(response.data);
+      } catch (error) {
+        console.error("Eroare:", error);
+      }
+  };
+
+  const handleSubmit = async (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     let ipdest =
@@ -89,8 +190,7 @@ export default function SignUp(props) {
       console.log(props.name);
       console.log(props.methodPort);
 
-      
-      const dataPUT = { 
+      const dataPUT = {
         // console.log({
         traffic: props.name,
         pkts: data.get("pkts"),
@@ -99,7 +199,8 @@ export default function SignUp(props) {
         ipDest: ipdest,
         ipSrc: ipsrc,
         method: data.get("method"),
-        flags: data.get("flags")};
+        flags: data.get("flags"),
+      };
       // });
       setNoPkt("");
       setFlags("");
@@ -114,33 +215,24 @@ export default function SignUp(props) {
       setIpSrcC("");
       setIpSrcD("");
 
-
-      let url="http://localhost:5000/api/generatetraffic"
-      try{
+      let url = "http://localhost:5000/api/generatetraffic";
+      try {
         const response = await axios.put(url, dataPUT);
-        console.log(response.data)
-        
-
-
-
-      }catch(error ){
+        console.log(response.data);
+      } catch (error) {
         console.error("Eroare:", error);
-      };
-
-
-
+      }
 
       // let url="http://127.0.0.1:5000/generatetraffic"
       // axios.put(url, dataPUT)        # else:
-        // #         return "not good"
+      // #         return "not good"
       // .then(response => {
       //   console.log("Răspuns de la server:", response.data);
-        
+
       // })
       // .catch(error => {
       //   console.error("Eroare:", error);
       // });
-
     }
   };
 
@@ -349,7 +441,7 @@ export default function SignUp(props) {
                 </Select>
               </FormControl>
 
-              {(props.name === "tcp" )? (
+              {props.name === "tcp" ? (
                 <FormControl sx={{ m: 2, width: 175 }}>
                   <InputLabel id="demo-simple-select-helper-label">
                     Flags
@@ -406,6 +498,38 @@ export default function SignUp(props) {
               sx={{ mt: 3, mb: 2 }}
             >
               Send traffic
+            </Button>
+
+            <Button
+              onClick={SendNormalTraffic}
+              variant="contained"
+              sx={{ mt: 3, mb: 2 }}
+            >
+              Send normal traffic
+            </Button>
+
+            <Button
+              onClick={sendDDoSTraffic}
+              variant="contained"
+              sx={{ mt: 3, mb: 2 }}
+            >
+              Send DDoS traffic
+            </Button>
+
+            <Button
+              onClick={SendSmurfTraffic}
+              variant="contained"
+              sx={{ mt: 3, mb: 2 }}
+            >
+              Send smuf/insider traffic
+            </Button>
+
+            <Button
+              onClick={sendBufferTraffic}
+              variant="contained"
+              sx={{ mt: 3, mb: 2 }}
+            >
+              Send Buffer overrun/Amplification traffic
             </Button>
             <Grid container justifyContent="flex-end"></Grid>
           </Box>

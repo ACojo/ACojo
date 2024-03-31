@@ -33,6 +33,27 @@ print(confusion_matrix(y_test, y_predict))
 print(classification_report(y_test, y_predict))
 print(accuracy_score(y_test, y_predict))
 
+
+
+#to delete / this is for the test purposes only
+data = pd.read_csv("/home/scooby-doo/Disertatie/DataSet/traffic_tcp_processed.csv")
+
+x_real = scaler.fit_transform(data)
+y_real = knn.predict(x_real)
+wtf = [ 0, 0, 0, 0] 
+print("*************")
+print(y_real)
+print("*************")
+for x in y_real:
+    wtf[x] +=1
+
+print("************")
+print(wtf)
+
+print("***************")
+
+
+
 # finding the best k
 err_rate = []
 min = np.mean(y_predict != y_test)
