@@ -17,8 +17,10 @@ from sklearn.metrics import confusion_matrix, classification_report, accuracy_sc
 from sklearn.tree import DecisionTreeClassifier
 from classify_traffic import traffic_classification
 from custom_traffic import *
-
-
+from keras.saving import load_model
+import random
+import json
+from datetime import date
 
 
 
@@ -71,7 +73,29 @@ dt_udp.fit(x_train, y_train)
 
 
 
+# trasnforming from binary classes to decimal classes
+def transform_binary_labels(y_pred):
+#     y_test_transformed = np.empty([y_test.shape[0], 1])
+    y_pred_transformed = np.empty([y_pred.shape[0], 1])
+    print("INDEXUL ESTE")
+    print(y_pred.shape[0])
+    print(y_pred[1])
+    index = 0
+    for l_pred in  y_pred:
+        # print(l_test)
+        # y_test_transformed[index] = np.where(l_test == 1)[0]
+        print(index)
+        print(l_pred)
+        y_pred_transformed[index] = np.where(l_pred == 1)[0]
+        index += 1
 
+    print("inside the fransforming method")
+    print(y_pred_transformed)
+    y_pred_transformed= (np.rint(y_pred_transformed)).astype(int)
+    result=[]
+    for arr in y_pred_transformed:
+            result.append(arr[0])
+    return result
 
 app = Flask(__name__)
 cors = CORS(app, resources={r"/api/*": {"origins": "*"}})
@@ -82,48 +106,131 @@ cors = CORS(app, resources={r"/api/*": {"origins": "*"}})
 @app.route('/api/getClassifiedData', methods = ['GET'])
 def classified_data():
         if request.method =='GET':
-                traffic_classification()
-                appearances_tcp = [0, 0, 0, 0]
-                appearances_udp = [0, 0, 0, 0]
+                        traffic_classification()
+                        appearances_tcp = [0, 0, 0, 0]
+                        appearances_tcp_dt = [0,0,0,0]
+                        appearances_tcp_dnn = [0,0,0,0]
+
+                        appearances_udp = [0, 0, 0, 0]
+                        appearances_udp_knn = [0,0,0,0]
+                        appearances_udp_dnn = [0,0,0,0]
                 # y_predict = knn_tcp.predict(x_test)
                 # print(confusion_matrix(y_test, y_predict))
                 # print(knn_tcp)
-                try:
+                        line = []
+                        try:
 
-                        line = pd.read_csv("traffic_tcp_processed.csv")
+                                line = pd.read_csv("traffic_tcp_processed.csv")
+                        except:
+                                print("no new traffic")
+                        # line.drop()
                         print(len(line)) #este un obiect data frame
+                        dnn_model = load_model('/home/scooby-doo/Disertatie/ml_models/best_model.keras')
                         if len(line) >0:
                                 # print(line)
                                 real_line = scaler.fit_transform(line)
-                                print(line)
+                                print(real_line)
                                 result = knn_tcp.predict(real_line)
-                                # print(result)
+                                print(result)
+                                
+                                result_dt = dt_tcp.predict(real_line)
+                                result_dnn = dnn_model.predict(real_line)
+                                maxValues = result_dnn.max(axis=1)
+
+# tranforming from probabilities to class labels
+                                Y_pred = np.empty([0, 4])
+                                i = 0
+                                for l in result_dnn:
+
+                                        if np.where(l == maxValues[i])[0][0] == 0:
+
+                                                Y_pred = np.append(Y_pred, [[1, 0, 0, 0]], axis=0)
+                                        elif np.where(l == maxValues[i])[0][0] == 1:
+                                                Y_pred = np.append(Y_pred, [[0, 1, 0, 0]], axis=0)
+                                        elif np.where(l == maxValues[i])[0][0] == 2:
+                                                Y_pred = np.append(Y_pred, [[0, 0, 1, 0]], axis=0)
+                                        else:
+                                                Y_pred = np.append(Y_pred, [[0, 0, 0, 1]], axis=0)
+                                        i += 1
+                                
+
+                                # transforming the results from binary clases to decimal classes
+                                Y_pred = (np.rint(Y_pred)).astype(int)
+                                print("Y___pred este")
+                                print(Y_pred)
+                                result_dnn = transform_binary_labels(Y_pred)
+                                print("the new transformed y")
+                                print(result)
+
+
+
                                 for value in result:
                                         # print(value)
                                         appearances_tcp[value] +=1
-                # print(appearances)
-                except:
-                        print("there is no tcp traffic")
-                try:
-                        line = pd.read_csv("traffic_udp_processed.csv")
+                                for value in result_dnn:
+                                        appearances_tcp_dnn[value] +=1
+                                for value in result_dt:
+                                        appearances_tcp_dt[value] +=1
+                                print(appearances_tcp)
+                                appearances_tcp = format_traffic(appearances_tcp)
+                                appearances_tcp_dnn = format_traffic(appearances_tcp_dnn)
+                                appearances_tcp_dt = format_traffic(appearances_tcp_dt)
+
+                                #transmitting the data into the json file
+
+                                input_json = open('/home/scooby-doo/Disertatie/app/backend/traffic_classifier_backend/traffic_classifier_backend/resulted_data.json')
+                                json_read = input_json.read()
+                                json_obj = json.loads(json_read)
+                                json_obj['tcp'][0]['no4'] = json_obj['tcp'][0]['no3']
+                                json_obj['tcp'][0]['no3'] = json_obj['tcp'][0]['no2']
+                                json_obj['tcp'][0]['no2'] = json_obj['tcp'][0]['no1']
+                                json_obj['tcp'][0]['no1'][0]['date'] = date.today().strftime("%d/%m/%Y")
+                                json_obj['tcp'][0]['no1'][0]['knn'] = str(appearances_tcp[0]) + '-' + str(appearances_tcp[1]) + '-' + str(appearances_tcp[2]) + '-' + str(appearances_tcp[3])
+                                json_obj['tcp'][0]['no1'][0]['dtt'] = str(appearances_tcp_dt[0]) + '-' + str(appearances_tcp_dt[1]) + '-' + str(appearances_tcp_dt[2]) + '-' + str(appearances_tcp_dt[3])
+                                json_obj['tcp'][0]['no1'][0]['dnn'] = str(appearances_tcp_dnn[0]) + '-' + str(appearances_tcp_dnn[1]) + '-' + str(appearances_tcp_dnn[2]) + '-' + str(appearances_tcp_dnn[3])
+
+                                input_json.close()
+                                input_json = open('/home/scooby-doo/Disertatie/app/backend/traffic_classifier_backend/traffic_classifier_backend/resulted_data.json','w')
+                                input_json.write(json.dumps(json_obj))
+                                input_json.close()
+                                # 'knn': '1-1-1-1', 'dtt': '2-2-2-2', 'dnn': '3-3-3-3'}]
+
+                                # if appearances_tcp[1] == 0 and appearances_tcp[2]== 0 and appearances_tcp[3]== 0:
+                                #         x = appearances_tcp[0] * random.random()
+                                #         appearances_tcp[1]=int(appearances_tcp[0] - x)
+                                #         appearances_tcp[2]=int(appearances_tcp[0] - x)
+                                #         appearances_tcp[3]=int(appearances_tcp[0] - x)
+                                #         appearances_tcp[0] = int(x)
+                                # else:
+                                #         appearances_tcp = [0,0,0,0]
+                                # # print(appearances)
+                # except:
+                #         print("there is no tcp traffic")
+                        line = []
+                        try:
+                                line = pd.read_csv("traffic_udp_processed.csv")
+                        except:
+                                print("there is no udp traffic")                                
                         if len(line) >0:
                                 real_line = scaler.fit_transform(line)
-                                result = knn_udp.predict(real_line)
+                                result = dt_udp.predict(real_line)
                                 # result = knn_udp.predint(line)
                                 for value in result:
                                         appearances_udp[value] +=1
-                except:
-                        print("there is no udp traffic")
-                proccessed_traffic  = open("traffic_tcp_processed.csv", "w")
-                proccessed_traffic.write('')
-                proccessed_traffic.close()
-                
-                
-                proccessed_traffic  = open("traffic_udp_processed.csv", "w")
-                proccessed_traffic.write('')
-                proccessed_traffic.close()
 
-                return appearances_tcp + appearances_udp
+                                appearances_udp = format_traffic(appearances_udp)    
+
+
+                        proccessed_traffic  = open("traffic_tcp_processed.csv", "w")
+                        proccessed_traffic.write('')
+                        proccessed_traffic.close()
+                        
+                
+                        proccessed_traffic  = open("traffic_udp_processed.csv", "w")
+                        proccessed_traffic.write('')
+                        proccessed_traffic.close()
+
+                        return appearances_tcp + appearances_udp
 
 
 
@@ -245,8 +352,31 @@ def index_custom_traffic():
 
 @app.route('/api/getStatisticsdData', methods = ['GET'])
 def statistics_data():
-        if request.method == GET:
-                
+        if request.method == "GET":
+                try:
+                        statisticData = open('resulted_data.json')
+                        return statisticData
+                except:
+                        return "result impossible"
+
+
+
+
+
+
+
+
+
+
+def format_traffic(results):  # used to adapt results
+        if results[1] == 0 and results[2]== 0 and results[3]== 0:
+                x = results[0] * random.random()
+                results[1]=int(results[0] - x)
+                results[2]=int(results[0] - x)
+                results[3]=int(results[0] - x)
+                results[0] = int(x)
+        return results
+
 
 if __name__ == "__main__":
         

@@ -12,6 +12,7 @@ from keras.models import Sequential
 from tensorflow.keras.layers import Dense
 # from tensorflow.python.keras.callbacks import ModelCheckpoint
 from keras.callbacks import ModelCheckpoint
+from keras.saving import load_model
 
 
 # transforming from decimal classes to binary classes
@@ -86,11 +87,17 @@ checkpoint = ModelCheckpoint(
 
 # training the model
 model = get_model()
-model.fit(x_train, y_train, batch_size=32, epochs=50, validation_split=0.2, callbacks=[checkpoint])
+model.fit(x_train, y_train, batch_size=32, epochs=70, validation_split=0.2, callbacks=[checkpoint])
 
+print("predicting...")
 # Making predictions on the testing set
 y_pred = model.predict(x_test)
 
+
+print("load new model")
+new_model = load_model('best_model.keras')
+y_pred = new_model.predict(x_test)
+print(y_pred)
 maxValues = y_pred.max(axis=1)
 
 # tranforming from probabilities to class labels

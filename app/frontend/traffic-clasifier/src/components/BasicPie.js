@@ -19,10 +19,10 @@ export default function BasicPie(props) {
         series={[
           {
             data: [
-              { id: 0, value: props.tcpResult[0], label: props.type[0] },
-              { id: 1, value: props.tcpResult[1], label: props.type[1]},
-              { id: 2, value: props.tcpResult[2], label: props.type[2] },
-              { id: 3, value: props.tcpResult[3], label: props.type[3] },
+              { id: 0, value: props.tcpResult[0], label: "OK traffic"},  //props.type[0] },
+              { id: 1, value: props.tcpResult[1] + props.tcpResult[2] + props.tcpResult[3], label: "Malitious traffic"}, // props.type[1]},
+              // { id: 2, value: props.tcpResult[2], label: props.type[2] },
+              // { id: 3, value: props.tcpResult[3], label: props.type[3] },
             ],
           },
         ]}

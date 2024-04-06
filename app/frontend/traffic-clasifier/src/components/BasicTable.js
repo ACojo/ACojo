@@ -8,24 +8,30 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 
 function createData(
-  timestamp: number,
-  knn: number,
-  dt: number,
-  dnn: number,
+  timestamp: String,
+  knn: String,
+  dt: String,
+  dnn: String,
   
 ) {
   return { timestamp, knn, dt, dnn };
 }
 
-const rows = [
-  createData('Frozen yoghurt', "59,11,11,11", 6.0, 24),
-  createData('Ice cream sandwich', 237, 9.0, 37),
-  createData('Eclair', 262, 16.0, 24),
-  createData('Cupcake', 305, 3.7, 67),
-  createData('Gingerbread', 356, 16.0, 49),
-];
+
 
 export default function BasicTable(props) {
+  console.log("rewfrfre")
+  console.log(props.data)
+  console.log(props.data[0]['no1'][0]['date'])
+  const rows = [
+    createData(props.data[0]['no1'][0]['date'], props.data[0]['no1'][0]['knn'], props.data[0]['no1'][0]['dtt'], props.data[0]['no1'][0]['dnn']),
+    createData(props.data[0]['no2'][0]['date'], props.data[0]['no2'][0]['knn'], props.data[0]['no2'][0]['dtt'], props.data[0]['no2'][0]['dnn']),
+    createData(props.data[0]['no3'][0]['date'], props.data[0]['no3'][0]['knn'], props.data[0]['no3'][0]['dtt'], props.data[0]['no3'][0]['dnn']),
+    createData(props.data[0]['no4'][0]['date'], props.data[0]['no4'][0]['knn'], props.data[0]['no4'][0]['dtt'], props.data[0]['no4'][0]['dnn']),
+    createData(props.data[0]['no5'][0]['date'], props.data[0]['no5'][0]['knn'], props.data[0]['no5'][0]['dtt'], props.data[0]['no5'][0]['dnn']),
+  ];
+  console.log("look here")
+  console.log(props.data[0]['no1'][0]['date'])
   return (
     <TableContainer component={Paper}>
       <Table sx={{ minWidth: 650 }} aria-label="simple table">
@@ -33,8 +39,8 @@ export default function BasicTable(props) {
         {props.type} data each row (normal DDoS {props.attack2} {props.attack3})
           <TableRow>
             <TableCell>Timestamp of evaluation</TableCell>
-            <TableCell align="center">KNN&nbsp;()</TableCell>
-            <TableCell align="center">DT&nbsp;(%)</TableCell>
+            <TableCell align="center">KNN</TableCell>
+            <TableCell align="center">DT</TableCell>
             <TableCell align="center">DNN</TableCell>
             {/* <TableCell align="right">Protein&nbsp;(g)</TableCell> */}
           </TableRow>
