@@ -183,6 +183,7 @@ def classified_data():
                                 input_json = open('/home/scooby-doo/Disertatie/app/backend/traffic_classifier_backend/traffic_classifier_backend/resulted_data.json')
                                 json_read = input_json.read()
                                 json_obj = json.loads(json_read)
+                                json_obj['tcp'][0]['no5'] = json_obj['tcp'][0]['no4']
                                 json_obj['tcp'][0]['no4'] = json_obj['tcp'][0]['no3']
                                 json_obj['tcp'][0]['no3'] = json_obj['tcp'][0]['no2']
                                 json_obj['tcp'][0]['no2'] = json_obj['tcp'][0]['no1']
@@ -273,6 +274,7 @@ def classified_data():
                                 input_json = open('/home/scooby-doo/Disertatie/app/backend/traffic_classifier_backend/traffic_classifier_backend/resulted_data.json')
                                 json_read = input_json.read()
                                 json_obj = json.loads(json_read)
+                                json_obj['udp'][0]['no5'] = json_obj['udp'][0]['no4']
                                 json_obj['udp'][0]['no4'] = json_obj['udp'][0]['no3']
                                 json_obj['udp'][0]['no3'] = json_obj['udp'][0]['no2']
                                 json_obj['udp'][0]['no2'] = json_obj['udp'][0]['no1']
