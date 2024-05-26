@@ -77,7 +77,7 @@ def get_model():
 
 
 checkpoint = ModelCheckpoint(
-    'best_model.keras',        # where to save the model
+    'best_model_udp.keras',        # where to save the model
     monitor='val_loss',               # metric to be monitored
     verbose = 1,
     save_best_only = True,            # save only the best model

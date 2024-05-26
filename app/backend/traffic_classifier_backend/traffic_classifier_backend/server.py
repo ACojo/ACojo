@@ -23,6 +23,8 @@ import json
 from datetime import date
 
 
+dnn_model = load_model('/home/scooby-doo/Disertatie/ml_models/best_model.keras')
+dnn_model_udp = load_model('/home/scooby-doo/Disertatie/ml_models/best_model_udp.keras')
 
 knn_tcp = KNeighborsClassifier(n_neighbors=5)
 dt_tcp = DecisionTreeClassifier()
@@ -112,7 +114,7 @@ def classified_data():
                         appearances_tcp_dnn = [0,0,0,0]
 
                         appearances_udp = [0, 0, 0, 0]
-                        appearances_udp_knn = [0,0,0,0]
+                        appearances_udp_dt = [0,0,0,0]
                         appearances_udp_dnn = [0,0,0,0]
                 # y_predict = knn_tcp.predict(x_test)
                 # print(confusion_matrix(y_test, y_predict))
@@ -125,7 +127,7 @@ def classified_data():
                                 print("no new traffic")
                         # line.drop()
                         print(len(line)) #este un obiect data frame
-                        dnn_model = load_model('/home/scooby-doo/Disertatie/ml_models/best_model.keras')
+                        
                         if len(line) >0:
                                 # print(line)
                                 real_line = scaler.fit_transform(line)
@@ -213,12 +215,76 @@ def classified_data():
                                 print("there is no udp traffic")                                
                         if len(line) >0:
                                 real_line = scaler.fit_transform(line)
-                                result = dt_udp.predict(real_line)
-                                # result = knn_udp.predint(line)
+                                # result_dt = dt_udp.predict(real_line)
+                                result = knn_udp.predict(real_line)
                                 for value in result:
                                         appearances_udp[value] +=1
 
-                                appearances_udp = format_traffic(appearances_udp)    
+                                appearances_udp = format_traffic(appearances_udp)   
+                                appearances_udp_dnn = format_traffic(appearances_udp_dnn)
+                                appearances_udp_dt = format_traffic(appearances_udp_dt)
+
+                                                                #transmitting the data into the json file
+                                result_dt = dt_udp.predict(real_line)
+                                result_dnn = dnn_model_udp.predict(real_line)
+                                maxValues = result_dnn.max(axis=1)
+
+# tranforming from probabilities to class labels
+                                Y_pred = np.empty([0, 4])
+                                i = 0
+                                for l in result_dnn:
+
+                                        if np.where(l == maxValues[i])[0][0] == 0:
+
+                                                Y_pred = np.append(Y_pred, [[1, 0, 0, 0]], axis=0)
+                                        elif np.where(l == maxValues[i])[0][0] == 1:
+                                                Y_pred = np.append(Y_pred, [[0, 1, 0, 0]], axis=0)
+                                        elif np.where(l == maxValues[i])[0][0] == 2:
+                                                Y_pred = np.append(Y_pred, [[0, 0, 1, 0]], axis=0)
+                                        else:
+                                                Y_pred = np.append(Y_pred, [[0, 0, 0, 1]], axis=0)
+                                        i += 1
+                                
+
+                                # transforming the results from binary clases to decimal classes
+                                Y_pred = (np.rint(Y_pred)).astype(int)
+                                print("Y___pred este")
+                                print(Y_pred)
+                                result_dnn = transform_binary_labels(Y_pred)
+                                print("the new transformed y")
+                                print(result)
+
+
+
+                                for value in result:
+                                        # print(value)
+                                        appearances_udp[value] +=1
+                                for value in result_dnn:
+                                        appearances_udp_dnn[value] +=1
+                                for value in result_dt:
+                                        appearances_udp_dt[value] +=1
+                                print(appearances_udp)
+                                appearances_udp = format_traffic(appearances_udp)
+                                appearances_udp_dnn = format_traffic(appearances_udp_dnn)
+                                appearances_udp_dt = format_traffic(appearances_udp_dt)
+
+                                #transmitting the data into the json file
+
+                                input_json = open('/home/scooby-doo/Disertatie/app/backend/traffic_classifier_backend/traffic_classifier_backend/resulted_data.json')
+                                json_read = input_json.read()
+                                json_obj = json.loads(json_read)
+                                json_obj['udp'][0]['no4'] = json_obj['udp'][0]['no3']
+                                json_obj['udp'][0]['no3'] = json_obj['udp'][0]['no2']
+                                json_obj['udp'][0]['no2'] = json_obj['udp'][0]['no1']
+                                json_obj['udp'][0]['no1'][0]['date'] = date.today().strftime("%d/%m/%Y")
+                                json_obj['udp'][0]['no1'][0]['knn'] = str(appearances_udp[0]) + '-' + str(appearances_udp[1]) + '-' + str(appearances_udp[2]) + '-' + str(appearances_udp[3])
+                                json_obj['udp'][0]['no1'][0]['dtt'] = str(appearances_udp_dt[0]) + '-' + str(appearances_udp_dt[1]) + '-' + str(appearances_udp_dt[2]) + '-' + str(appearances_udp_dt[3])
+                                json_obj['udp'][0]['no1'][0]['dnn'] = str(appearances_udp_dnn[0]) + '-' + str(appearances_udp_dnn[1]) + '-' + str(appearances_udp_dnn[2]) + '-' + str(appearances_udp_dnn[3])
+
+                                input_json.close()
+                                input_json = open('/home/scooby-doo/Disertatie/app/backend/traffic_classifier_backend/traffic_classifier_backend/resulted_data.json','w')
+                                input_json.write(json.dumps(json_obj))
+                                input_json.close() 
 
 
                         proccessed_traffic  = open("traffic_tcp_processed.csv", "w")

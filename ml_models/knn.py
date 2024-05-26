@@ -59,41 +59,41 @@ print("***************")
 
 
 # # finding the best k
-# err_rate = []
-# min = np.mean(y_predict != y_test)
-# for i in range(1, 30):
-#     knn = KNeighborsClassifier(n_neighbors=i)
-#     knn.fit(x_train, y_train)
+err_rate = []
+min = np.mean(y_predict != y_test)
+for i in range(1, 30):
+    knn = KNeighborsClassifier(n_neighbors=i)
+    knn.fit(x_train, y_train)
 
-#     i_predict = knn.predict(x_test)
-#     err_rate.append((np.mean(i_predict != y_test)))
+    i_predict = knn.predict(x_test)
+    err_rate.append((np.mean(i_predict != y_test)))
 
-#     if err_rate[i-1] < min :
-#         min = err_rate[i-1]
-
-
+    if err_rate[i-1] < min :
+        min = err_rate[i-1]
 
 
 
-# plt.figure(figsize=(10, 6))
-# plt.plot(range(1, 30), err_rate, color='blue', linestyle='--', markersize=10, markerfacecolor='red', marker='o')
-# plt.title("Error rate")
-# plt.xlabel('k')
-# plt.ylabel('Error')
-# plt.draw()
-
-# print("-----------------------")
-# print("best classifier")
-# print(min)
-# knn = KNeighborsClassifier(n_neighbors=3)
-
-# knn.fit(x_train, y_train)
-
-# y_predict = knn.predict(x_test)
-
-# print(confusion_matrix(y_test, y_predict))
-# print(classification_report(y_test, y_predict))
-# print(classification_report(y_test, y_predict))
 
 
-# plt.show()
+plt.figure(figsize=(10, 6))
+plt.plot(range(1, 30), err_rate, color='blue', linestyle='--', markersize=10, markerfacecolor='red', marker='o')
+plt.title("Error rate")
+plt.xlabel('k')
+plt.ylabel('Error')
+plt.draw()
+
+print("-----------------------")
+print("best classifier")
+print(min)
+knn = KNeighborsClassifier(n_neighbors=3)
+
+knn.fit(x_train, y_train)
+
+y_predict = knn.predict(x_test)
+
+print(confusion_matrix(y_test, y_predict))
+print(classification_report(y_test, y_predict))
+print(classification_report(y_test, y_predict))
+
+
+plt.show()
